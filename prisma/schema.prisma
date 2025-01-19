@@ -1,0 +1,108 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        String     @id @default(auto()) @map("_id") @db.ObjectId
+  name      String     @unique
+  email     String     @unique
+  password  String
+  rooms     Room[]     @relation("UserRooms")
+  operators Operator[] @relation("UserOperators")
+  buffet    Buffet[]
+  incomes   Income[]
+  role      Role
+  Invoice   Invoice[]  @relation("UserInvoices")
+  createdAt DateTime?  @default(now())
+  isActive  Boolean    @default(true)
+}
+
+model Operator {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  name     String
+  email    String @unique
+  password String
+  expenses Float
+  userId   String @db.ObjectId
+  user     User   @relation("UserOperators", fields: [userId], references: [id])
+}
+
+model Room {
+  id                   String   @id @default(auto()) @map("_id") @db.ObjectId
+  name                 String   @unique
+  isActive             Boolean
+  deActiveReason       String?
+  isBooked             Boolean?
+  contents             String[]
+  costPerHourForSingle Int
+  costPerHourForMulti  Int
+  playingMode          String?
+  startTime            String?
+  endTime              String?
+  maxFreeTime          Int
+  notes                String?
+  userId               String   @db.ObjectId
+  user                 User     @relation("UserRooms", fields: [userId], references: [id])
+  openingInvoiceId     String?  @db.ObjectId
+  invoice              Invoice? @relation("InvoiceRoom", fields: [openingInvoiceId], references: [id])
+}
+
+model Buffet {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  price           Float
+  name            String   @unique
+  discountedPrice Float
+  stock           Int
+  userId          String   @db.ObjectId
+  user            User     @relation(fields: [userId], references: [id])
+  createdAt       DateTime @default(now())
+}
+
+model Invoice {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  customerName      String
+  roomName          String
+  playingMode       String
+  totalSpentHours   Int
+  totalSpentMins    Int
+  totalBuffetTaken  Json     @default("[]")
+  totalBuffetPrice  Float
+  totalPlayingPrice Float
+  totalPrice        Float
+  userId            String   @db.ObjectId
+  user              User     @relation("UserInvoices", fields: [userId], references: [id])
+  createdAt         DateTime @default(now())
+
+  Room Room[] @relation("InvoiceRoom")
+}
+
+model Income {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  periodStart   DateTime
+  periodEnd     DateTime
+  playingIncome Float
+  buffetIncome  Float
+  totalIncome   Float
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  userId        String   @db.ObjectId
+  user          User     @relation(fields: [userId], references: [id])
+
+  @@unique([userId, periodStart, periodEnd]) // Ensure uniqueness for the period  
+}
+
+enum Role {
+  SUPER_ADMIN
+  ADMIN
+}

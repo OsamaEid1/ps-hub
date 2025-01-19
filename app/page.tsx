@@ -1,101 +1,98 @@
+"use client"
+// React
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
+// helpers
+import { signIn } from "./helpers/auth/signIn";
+// components
+import MainButton from "app/@components/ui/form/MainButton";
+import Loading from "app/@components/ui/Loading";
+import MainInput from "./@components/ui/form/MainInput";
+import DynamicTitle from "./@components/global/DynamicTitle";
 
-export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+const SignIn = () => {
+    const [password, setPass] = useState("");
+    const [email, setEmail] = useState("");
+    const [error, setError] = useState<string | null>(null);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+    const [loading, setIsLoading] = useState(false);
+    const [successOP, setSuccessOp] = useState(false);
+
+    const router = useRouter();
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsLoading(true);
+        setError(null);
+
+        try {
+            const user = await signIn(email, password);
+            // Handle redirection based on user role
+            if (user.role === "ADMIN") {
+                setSuccessOp(true);
+                router.replace('/admin/display-rooms');
+            } else if (user.role === 'SUPER_ADMIN') {
+                setSuccessOp(true);
+                router.replace('/super-admin/manage-admins');
+            } else {
+                setSuccessOp(true);
+                alert('ليس لديك صلاحية للدخول، راجع مدير النظم!');
+                window.location.reload();
+            }
+        } catch (error: any) {
+            setError(error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+
+    return(
+        <>
+            <DynamicTitle title='تسجيل الدخول' />
+            <div dir="ltr" className="h-screen flex justify-center items-center relative">
+                {(loading || successOP) && (<Loading />)}
+                <div className="
+                        text-lg bg-secondary w-fit max-w-[300px] flex flex-col justify-center items-center
+                        py-3 px-5 rounded-main
+                    ">
+                    <Image src={"/logo.png"} width={100} height={100} alt="Logo" />
+                    <h2 className="font-extrabold mt-2 mb-5">تسجيل الدخول</h2>
+                    <form className="flex flex-col text-center" onSubmit={handleSubmit}>
+                        <MainInput 
+                            id="email"
+                            type="email" 
+                            placeholder="الإيميل" 
+                            inputStyles="mb-4 text-left xl:w-[250px]"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required={true} 
+                        />
+                        <MainInput 
+                            id="pass"
+                            type="password" 
+                            placeholder="كلمة السر"
+                            inputStyles="text-left"
+                            value={password}
+                            onChange={(e) => setPass(e.target.value)}
+                            required={true}
+                        />
+                        {error && <span className="err-msg mt-2">{ error }</span>}
+                        <MainButton
+                            type="submit"
+                            className="
+                                w-fit mx-auto mt-5
+                                font-semibold py-1 px-2
+                            "
+                            disabled={loading || successOP}
+                        >
+                            تسجيل
+                        </MainButton>
+                    </form>
+                </div>
+            </div>
+        </>
+    )
 }
+
+export default SignIn

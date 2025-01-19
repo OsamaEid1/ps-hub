@@ -1,26 +1,79 @@
 {
   "compilerOptions": {
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "noEmit": true,
-    "esModuleInterop": true,
-    "module": "esnext",
-    "moduleResolution": "bundler",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "preserve",
-    "incremental": true,
+    // Basic Options
+    "target": "esnext", // Target latest ECMAScript version
+    "lib": [
+      "DOM",
+      "dom.iterable",
+      "ESNext"
+    ], // Include libraries for DOM and ECMAScript features
+    "allowJs": true, // Allow JavaScript files to be compiled
+    "skipLibCheck": true, // Skip type checking of declaration files (improves speed)
+    "strict": true, // Enable all strict type-checking options
+    "noEmit": true, // Do not emit outputs (handled by Next.js)
+    "module": "esnext", // Use ECMAScript module system
+    "moduleResolution": "node", // Use Node.js style module resolution
+    "esModuleInterop": true, // Enable interoperability between CommonJS and ES modules
+    "resolveJsonModule": true, // Allow importing JSON files as modules
+    "isolatedModules": true, // Ensure each file is treated as a separate module
+    "jsx": "preserve", // Keep JSX as-is, Next.js will handle JSX transformation
+    // Paths and Imports
+    "baseUrl": ".", // Set base URL for module resolution
+    "paths": {
+      "@components/*": [
+        "components/*"
+      ], // Define path aliases for easier imports
+      "@styles/*": [
+        "styles/*"
+      ]
+    },
+    // Additional Checks
+    "forceConsistentCasingInFileNames": true, // Enforce case-sensitive file names
+    "noImplicitAny": false, // Prevent usage of the `any` type without explicit declaration
+    "noUnusedLocals": false, // Error on unused local variables
+    "noUnusedParameters": false, // Error on unused function parameters
+    "noImplicitReturns": true, // Error if some code paths don't return a value
+    "noFallthroughCasesInSwitch": true, // Ensure all switch cases are handled properly
+    "strictNullChecks": true, // Ensure `null` and `undefined` are handled correctly
+    // TypeScript features
+    "allowSyntheticDefaultImports": true, // Allow default imports from modules with no default export
+    "experimentalDecorators": true, // Enable experimental decorators
+    "emitDecoratorMetadata": true, // Emit metadata for decorators
+    // Next.js Specific
+    "incremental": true, // Enable incremental compilation to improve performance
+    // "types": ["next", "next/types/global"],   // Include Next.js types
+    // Source Maps
+    "sourceMap": true, // Enable source maps for easier debugging
+    "inlineSources": true, // Include source files in the source maps
+    // Type Definitions
+    "typeRoots": [
+      "./node_modules/@types",
+      "./types"
+    ] // Specify where TypeScript should look for type definitions
+    ,
     "plugins": [
       {
         "name": "next"
       }
-    ],
-    "paths": {
-      "@/*": ["./*"]
-    }
+    ]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules", // Exclude node_modules directory
+    ".next", // Exclude .next build directory (Next.js handles this)
+    "out", // Exclude static export output folder
+    "dist", // Exclude build output folder
+    "build", // Exclude build output folder
+    "**/*.test.ts", // Exclude test files (optional)
+    "**/*.test.tsx", // Exclude test files (optional)
+    "**/*.spec.ts", // Exclude test files (optional)
+    "**/*.spec.tsx" // Exclude test files (optional)
+  ],
+  "include": [
+    "next-env.d.ts", // Include Next.js environment types
+    "**/*.ts", // Include TypeScript files
+    "**/*.tsx" // Include TypeScript React files
+    ,
+    ".next/types/**/*.ts", "pages/api/admin/invoice/delete-invoice",
+    // "pages/@components/ui/Loading.js"
+]
 }

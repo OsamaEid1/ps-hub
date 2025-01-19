@@ -3,25 +3,103 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  text-align: right;
+  color: white;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+*:focus {
+  outline: white 1px solid;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: #1E1E2C;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+h1 {
+  font-size: 2em;
+  font-weight: 800;
+}
+
+h2 {
+  font-size: 1.5em;
+  font-weight: 800;
+}
+
+h3 {
+  font-size: 1.17em;
+  font-weight: 800;
+}
+
+h4 {
+  font-size: 1em;
+  font-weight: 800;
+}
+
+h5 {
+  font-size: 0.83em;
+  font-weight: 800;
+}
+
+h6 {
+  font-size: 0.67em;
+  font-weight: 800;
+}
+
+input {
+  color: black;
+}
+
+a.active {
+  background-color: #2F2F3D;
+  color: #7ba1fb
+}
+
+.main-input {
+  @apply rounded-lg p-2 duration-300 focus:outline focus:outline-blue-500 text-black max-w-full
+}
+
+.err-msg {
+  @apply text-red-500 text-base block my-2;
+}
+
+.main-card {
+  @apply min-h-28 min-w-28 max-h-inherit w-[90vw] xsm:w-[75vw] sm:w-[65vw] md:w-[50vw] lg:w-[45vw] xl:w-[30vw] max-w-full mx-auto p-5 rounded-main bg-secondary overflow-auto;
+}
+
+.main-card h2 {
+  @apply text-center mb-6 font-bold text-2xl;
+}
+
+h2 span {
+  vertical-align: middle;
+}
+h3 span {
+  vertical-align: middle;
+}
+
+.main-top-nav { 
+  @apply flex flex-col sm:flex-row gap-3 justify-between items-center bg-elements py-5 px-5 sm:px-10 rounded-main;
+}
+
+.parent-text {
+  font-weight: 600;
+  margin-bottom: 0.5rem /* 8px */;
+}
+.child-text {
+  font-weight: 700;
+  --tw-text-opacity: 1;
+  color: rgb(123 161 251 / var(--tw-text-opacity)) /* #7ba1fb */;
+  margin-inline-start: 0.25rem /* 4px */;
+  font-size: 1rem /* 16px */;
+  line-height: 1.5rem /* 24px */;
+}
+
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+.animate-spin-fast {
+    animation: spin 0.5s linear infinite;
 }
