@@ -75,6 +75,6 @@ export async function middleware(req: NextRequest) {
 export const config = {
     matcher: [
         // Match all routes except `/` and explicitly excluded patterns
-        "/((?!_next/.*|api|favicon.ico|sitemap.xml|robots.txt|globals.css|$).*)",
+        "/((?!_next/.*|api|favicon.ico|logo.png|sitemap.xml|robots.txt|globals.css|$).*)",
     ],
 };
