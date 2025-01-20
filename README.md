@@ -55,7 +55,7 @@ The **PS-Hub** is a web application designed to efficiently manage PlayStation g
 
 ## Technologies Used
 
-- **Framework:** Next.js
+- **Framework:** Next.js - Typescript
 - **Styling:** TailwindCSS
 - **Database ORM:** Prisma
 - **Database:** MongoDB (Atlas)
