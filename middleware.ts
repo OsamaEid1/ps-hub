@@ -24,7 +24,7 @@ export async function middleware(req: NextRequest) {
 
     // Verify the JWT token
     const userCardinalities = await getUserCardinalities(token, SECRET_KEY);
-    if (!userCardinalities) {
+    if (!userCardinalities && pathname !== "/") {
         console.error("Failed to verify token");
         return NextResponse.redirect(new URL("/", req.url));
     }
@@ -75,6 +75,6 @@ export async function middleware(req: NextRequest) {
 export const config = {
     matcher: [
         // Match all routes except `/` and explicitly excluded patterns
-        "/((?!_next/.*|api|favicon.ico|logo.png|sitemap.xml|robots.txt|globals.css|$).*)",
+        "/((?!_next/.*|api|favicon.ico|logo.png|sitemap.xml|robots.txt|globals.css).*)",
     ],
 };
