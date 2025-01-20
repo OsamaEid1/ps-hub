@@ -32,7 +32,7 @@ export async function middleware(req: NextRequest) {
     }
 
     // User Role
-    const userRole = userCardinalities.role.toLowerCase();
+    const userRole = userCardinalities?.role.toLowerCase();
 
     // Prevent Access Sign in Page When Token is Found
     if (userCardinalities && pathname === "/") {
