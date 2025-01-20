@@ -24,9 +24,11 @@ export async function middleware(req: NextRequest) {
 
     // Verify the JWT token
     const userCardinalities = await getUserCardinalities(token, SECRET_KEY);
-    if (!userCardinalities && pathname !== "/") {
-        console.error("Failed to verify token");
-        return NextResponse.redirect(new URL("/", req.url));
+    if (!userCardinalities) {
+        if (pathname !== '/') {
+            console.error("Failed to verify token");
+            return NextResponse.redirect(new URL("/", req.url));
+        }
     }
 
     // User Role
